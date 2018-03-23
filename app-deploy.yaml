@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: jenkins
+  name: jenkins
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "5000"
+        prometheus.io/scrape: "true"
+      creationTimestamp: null
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - args:
+        image: konikris/jenkins:jjmx
+        imagePullPolicy: Always
+        name: jenkinscontainer
+        ports:
+        - containerPort: 8080
+          name: webport
+          protocol: TCP
